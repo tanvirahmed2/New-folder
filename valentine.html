@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Be My Valentine? 💖</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Courier New', cursive;
+    background:#fdf6f0;
+    overflow:hidden;
+}
+
+/* Floating Hearts Background */
+.hearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:-1;
+}
+
+.heart{
+    position:absolute;
+    color:#ff4d6d;
+    animation: float 10s linear infinite;
+    font-size:20px;
+}
+
+@keyframes float{
+    0%{transform:translateY(100vh);}
+    100%{transform:translateY(-10vh);}
+}
+
+/* Envelope */
+.envelope{
+    width:300px;
+    height:200px;
+    background:#ffccd5;
+    margin:150px auto;
+    position:relative;
+    cursor:pointer;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.flap{
+    width:100%;
+    height:100px;
+    background:#ff8fab;
+    position:absolute;
+    top:0;
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    transition:0.8s;
+}
+
+/* Letter */
+.letter{
+    display:none;
+    padding:20px;
+    text-align:center;
+}
+
+.cat{
+    width:150px;
+    margin-top:10px;
+}
+
+/* Buttons */
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.3s;
+}
+
+#yes{
+    background:#ff4d6d;
+    color:white;
+}
+
+#no{
+    background:#999;
+    color:white;
+    position:absolute;
+}
+
+/* Lock Overlay */
+.lock{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    display:none;
+    z-index:5;
+
+    /* 🔥 THIS FIXES YOUR PROBLEM */
+    pointer-events: none;
+}
+
+/* Puzzle */
+.puzzle{
+    display:none;
+    text-align:center;
+    margin-top:20px;
+}
+
+.block{
+    display:inline-block;
+    background:#ffccd5;
+    padding:10px;
+    margin:5px;
+    cursor:pointer;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="lock" id="lock">
+Screen Locked Until You Click YES 💖
+</div>
+
+<div class="envelope" onclick="openEnvelope()">
+    <div class="flap" id="flap"></div>
+</div>
+
+<div class="letter" id="letter">
+<h2>Dear Aqish, 💌</h2>
+<p>
+I have never met someone like you. Who brings peace to my heart.  
+The world gets blurred out whenever I see you.  
+You may not be perfect but you're the most adorable imperfect person I have ever met.  
+The distance is not that long enough in between us.  
+I am here for you forever.
+</p>
+
+<p>From,<br> Kabir Singh (female version) 💖</p>
+
+<img class="cat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+
+<h3>Will you be my Valentine forever? 💘</h3>
+
+<div style="position:relative;height:100px;">
+<button id="yes" onclick="yesClicked()">YES 💖</button>
+<button id="no">NO 💔</button>
+</div>
+</div>
+
+<div class="puzzle" id="puzzle">
+<h3>Match the Blocks to Form the Sentence 💕</h3>
+<div id="blocks"></div>
+<p id="result"></p>
+</div>
+
+<script>
+
+/* Floating Hearts */
+for(let i=0;i<20;i++){
+    let heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(5+Math.random()*5)+"s";
+    document.getElementById("hearts").appendChild(heart);
+}
+
+/* Open Envelope */
+function openEnvelope(){
+    document.getElementById("flap").style.transform="rotateX(180deg)";
+    document.querySelector(".envelope").style.display="none";
+    document.getElementById("letter").style.display="block";
+    document.getElementById("lock").style.display="flex";
+}
+
+/* Running NO button */
+let noBtn=document.getElementById("no");
+let yesBtn=document.getElementById("yes");
+let size=1;
+
+noBtn.addEventListener("mouseover", function(){
+    let x=Math.random()*300;
+    let y=Math.random()*80;
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
+    size+=0.2;
+    yesBtn.style.transform="scale("+size+")";
+});
+
+/* YES Click */
+function yesClicked(){
+    document.getElementById("lock").style.display="none";
+    alert("YAYYYYY 💖💖💖");
+    document.getElementById("puzzle").style.display="block";
+    createPuzzle();
+}
+
+/* Puzzle */
+function createPuzzle(){
+    let sentence=["You","mean","the","world","to","me."];
+    sentence.sort(()=>Math.random()-0.5);
+    let container=document.getElementById("blocks");
+    container.innerHTML="";
+    sentence.forEach(word=>{
+        let block=document.createElement("div");
+        block.classList.add("block");
+        block.innerText=word;
+        block.onclick=function(){
+            container.appendChild(block);
+            checkPuzzle();
+        };
+        container.appendChild(block);
+    });
+}
+
+function checkPuzzle(){
+    let words=[...document.querySelectorAll(".block")].map(b=>b.innerText).join(" ");
+    if(words==="You mean the world to me."){
+        document.getElementById("result").innerText="You solved it 💖";
+    }
+}
+
+</script>
+
+</body>
+</html>
